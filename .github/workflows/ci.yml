@@ -20,6 +20,12 @@ jobs:
       ROCR_VISIBLE_DEVICES: "-1"
       HIP_VISIBLE_DEVICES: "-1"
       HIPFIRE_TEST_REQUIRE_ROCM: "0"
+      # Compile the test builds with light optimisation. The CPU emulation /
+      # oracle tests (hipfire-dispatch, hipfire-runtime, rdna-compute
+      # all_launcher_abi, e8p/mq GEMV emulators) spend ~90 min executing
+      # unoptimised code; opt-level 1 keeps debug assertions and overflow
+      # checks (only the optimiser changes), so test semantics are unchanged.
+      CARGO_PROFILE_DEV_OPT_LEVEL: "1"
     steps:
       - name: CPU info (fork-only)
         run: nproc && lscpu | grep -m1 'Model name'
